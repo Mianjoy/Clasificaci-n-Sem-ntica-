@@ -253,6 +253,19 @@
             }
         }
     </style>
+    <script>
+        // ⚙️ CONFIGURACIÓN - Actualiza estos valores con tu información de GitHub
+        const GITHUB_CONFIG = {
+            username: 'Mianjoy',  // Reemplaza con tu usuario de GitHub
+            repository: 'Clasificaci-n-Sem-ntica-',  // Reemplaza con el nombre de tu repositorio
+            repositoryFullName: 'Mianjoy/Clasificaci-n-Sem-ntica-'  // Usuario/Repositorio
+        };
+
+        // Generar URLs automáticamente
+        const REPO_URL = `https://github.com/${GITHUB_CONFIG.repositoryFullName}`;
+        const REPO_NAME = GITHUB_CONFIG.repository;
+        const USERNAME = GITHUB_CONFIG.username;
+    </script>
 </head>
 <body>
     <div class="container">
@@ -269,12 +282,9 @@
             </div>
 
             <div style="margin-top: 30px;">
-                <a href="#" class="btn" id="repo-link" target="_blank" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">📦 Ver Repositorio</a>
-                <a href="#" class="btn btn-secondary" id="download-link" target="_blank" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">⬇️ Descargar Código</a>
+                <a href="#" class="btn" id="repo-link" target="_blank">📦 Ver Repositorio</a>
+                <a href="#" class="btn btn-secondary" id="download-link" target="_blank">⬇️ Descargar Código</a>
             </div>
-            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
-                ⚠️ <strong>Nota:</strong> Actualiza <code>USERNAME</code> en este archivo con tu usuario de GitHub para que los enlaces funcionen correctamente.
-            </p>
         </header>
 
         <div class="feature-box">
@@ -315,7 +325,7 @@
                     <li>Iniciar la aplicación web</li>
                 </ol>
                 <div style="margin-top: 20px;">
-                    <a href="#" class="btn" style="font-size: 0.9em; padding: 10px 20px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">Ver Instrucciones Completas</a>
+                    <a href="#" class="btn" id="readme-link" style="font-size: 0.9em; padding: 10px 20px;" target="_blank">Ver Instrucciones Completas</a>
                 </div>
             </div>
 
@@ -336,11 +346,8 @@
             
             <p style="margin-bottom: 15px;"><strong>1. Clonar el repositorio:</strong></p>
             <div class="code-block">
-<code>git clone https://github.com/USUARIO_GITHUB/clasificador-textos-clasicos.git
-cd clasificador-textos-clasicos</code>
-            <p style="margin-top: 10px; color: var(--text-light); font-size: 0.9em;">
-                ⚠️ Reemplaza <code>USUARIO_GITHUB</code> con tu usuario de GitHub
-            </p>
+<code id="clone-command">git clone https://github.com/TU_USUARIO_GITHUB/REPOSITORIO.git
+cd REPOSITORIO</code>
             </div>
 
             <p style="margin-bottom: 15px; margin-top: 25px;"><strong>2. Instalar dependencias:</strong></p>
@@ -416,24 +423,49 @@ cd clasificador-textos-clasicos</code>
 
         <div class="feature-box">
             <h2 class="section-title">📝 Licencia</h2>
-            <p>Este proyecto está licenciado bajo la <strong>Licencia MIT</strong>. Ver el archivo <a href="#" target="_blank" style="color: var(--primary-color);" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">LICENSE</a> para más detalles.</p>
+            <p>Este proyecto está licenciado bajo la <strong>Licencia MIT</strong>. Ver el archivo <a href="#" id="license-link" target="_blank" style="color: var(--primary-color);">LICENSE</a> para más detalles.</p>
         </div>
 
         <footer>
             <p><strong>Clasificador Semántico de Textos Clásicos</strong></p>
             <p>Desarrollado como proyecto académico para clasificación semántica de textos clásicos</p>
             <p style="margin-top: 20px;">
-                <a href="#" class="btn" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">⭐ Ver en GitHub</a>
-                <a href="#" class="btn btn-secondary" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">🐛 Reportar Problema</a>
+                <a href="#" class="btn" id="github-link" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;">⭐ Ver en GitHub</a>
+                <a href="#" class="btn btn-secondary" id="issues-link" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;">🐛 Reportar Problema</a>
             </p>
-            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">
-                ℹ️ Actualiza <code>USERNAME</code> y <code>USUARIO_GITHUB</code> en este archivo con tu usuario de GitHub
+            <p id="config-warning" style="margin-top: 15px; font-size: 0.85em; color: #ff6b6b; display: none;">
+                ⚠️ <strong>Importante:</strong> Actualiza la configuración de GitHub en el archivo (líneas 257-261) para que los enlaces funcionen correctamente.
             </p>
             <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-light);">
                 © 2024 - Clasificador de Textos Clásicos
             </p>
         </footer>
     </div>
+
+    <script>
+        // Configurar enlaces automáticamente
+        (function() {
+            const needsConfig = GITHUB_CONFIG.username === 'TU_USUARIO_GITHUB';
+            
+            if (needsConfig) {
+                document.getElementById('config-warning').style.display = 'block';
+            }
+
+            // Configurar todos los enlaces
+            document.getElementById('repo-link').href = REPO_URL;
+            document.getElementById('download-link').href = `${REPO_URL}/archive/refs/heads/main.zip`;
+            document.getElementById('readme-link').href = `${REPO_URL}/blob/main/README.md`;
+            document.getElementById('github-link').href = REPO_URL;
+            document.getElementById('issues-link').href = `${REPO_URL}/issues`;
+            document.getElementById('license-link').href = `${REPO_URL}/blob/main/LICENSE`;
+            
+            // Actualizar comando de clonación
+            if (!needsConfig) {
+                document.getElementById('clone-command').textContent = 
+                    `git clone ${REPO_URL}.git\ncd ${REPO_NAME}`;
+            }
+        })();
+    </script>
 </body>
 </html>
 

@@ -258,15 +258,23 @@ pip install --upgrade pip
 
 ## 🌐 GitHub Pages
 
-Este proyecto incluye una página web estática en [GitHub Pages](https://USERNAME.github.io/clasificador-textos-clasicos/) que muestra información sobre el proyecto, características, instalación y uso.
+Este proyecto incluye una página web estática para GitHub Pages que muestra información sobre el proyecto, características, instalación y uso.
 
 **Para activar GitHub Pages:**
-1. Ve a Settings → Pages en tu repositorio de GitHub
-2. Selecciona la fuente: `Deploy from a branch`
-3. Selecciona la rama: `main` o `master`
-4. Selecciona la carpeta: `/docs`
-5. Haz clic en Save
-6. Tu página estará disponible en: `https://USERNAME.github.io/clasificador-textos-clasicos/`
+
+1. **Configura tu información de GitHub:**
+   - Abre `docs/index.html` y actualiza la configuración (líneas 257-261) con tu usuario y nombre de repositorio
+
+2. **Activa GitHub Pages:**
+   - Ve a Settings → Pages en tu repositorio de GitHub
+   - Selecciona la fuente: `Deploy from a branch`
+   - Selecciona la rama: `main` o `master`
+   - Selecciona la carpeta: `/docs`
+   - Haz clic en Save
+
+3. **Tu página estará disponible en:** `https://TU_USUARIO.github.io/NOMBRE_REPOSITORIO/`
+
+📖 **Para instrucciones detalladas, consulta:** [`docs/GITHUB_PAGES_SETUP.md`](docs/GITHUB_PAGES_SETUP.md)
 
 ## 🚀 Subir el Proyecto a GitHub
 
