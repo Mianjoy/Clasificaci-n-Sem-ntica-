@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Base de datos (permitir textos_clasicos.db para GitHub)
+*.db
+*.sqlite
+*.sqlite3
+!data/textos_clasicos.db
+
+# Modelos - Excluir directorio de modelos por defecto
+models/
+
+# Permitir modelo final entrenado (excluyendo checkpoints y logs)
+!models/clasificador_textos_clasicos/
+models/clasificador_textos_clasicos/checkpoint-*/
+models/clasificador_textos_clasicos/logs/
+models/clasificador_textos_clasicos/*.pt
+models/clasificador_textos_clasicos/*.pth
+# Permitir archivos esenciales del modelo entrenado
+!models/clasificador_textos_clasicos/*.bin
+!models/clasificador_textos_clasicos/*.json
+!models/clasificador_textos_clasicos/*.txt
+!models/clasificador_textos_clasicos/training_args.bin
+
+# Resultados (permitir docs/ para GitHub Pages)
+results/
+*.png
+*.jpg
+*.pdf
+*.csv
+!docs/
+!docs/**/*
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Datos sensibles
+*.xlsx
+*.xls
+!0.xlsx
+!1.xlsx
+!2.xlsx
+!3.xlsx
+!4.xlsx
+!5.xlsx
+!6.xlsx
+
+
+

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de IA para clasificación semántica de textos clásicos mediante Fine-Tuning de LLMs">
+    <meta name="keywords" content="IA, Machine Learning, Clasificación de Textos, LLM, DistilBERT, Textos Clásicos">
+    <title>Clasificador Semántico de Textos Clásicos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .badge:hover {
+            transform: translateY(-2px);
+        }
+
+        .badge-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card ul li:last-child {
+            border-bottom: none;
+        }
+
+        .card ul li:before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+
+        .feature-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block code {
+            color: #f8f8f2;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+        }
+
+        .categories {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .category-tag {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        footer {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        footer p {
+            color: var(--text-light);
+            margin: 10px 0;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Clasificador Semántico de Textos Clásicos</h1>
+            <p class="subtitle">Sistema de IA para clasificación automática mediante Fine-Tuning de LLMs</p>
+            
+            <div class="badges">
+                <span class="badge badge-primary">🤖 Machine Learning</span>
+                <span class="badge">📖 NLP</span>
+                <span class="badge">🔥 DistilBERT</span>
+                <span class="badge">🐍 Python</span>
+                <span class="badge">📊 Fine-Tuning</span>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <a href="#" class="btn" id="repo-link" target="_blank" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">📦 Ver Repositorio</a>
+                <a href="#" class="btn btn-secondary" id="download-link" target="_blank" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">⬇️ Descargar Código</a>
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                ⚠️ <strong>Nota:</strong> Actualiza <code>USERNAME</code> en este archivo con tu usuario de GitHub para que los enlaces funcionen correctamente.
+            </p>
+        </header>
+
+        <div class="feature-box">
+            <h2>📋 Descripción del Proyecto</h2>
+            <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                Este proyecto implementa un sistema completo de clasificación de textos utilizando técnicas de Deep Learning 
+                y Fine-Tuning sobre modelos de lenguaje pre-entrenados. El sistema está diseñado para ser accesible a 
+                investigadores en humanidades sin conocimientos técnicos previos.
+            </p>
+            
+            <div class="categories">
+                <span class="category-tag">🏛️ Areté</span>
+                <span class="category-tag">👑 Poder y Política</span>
+                <span class="category-tag">⚡ Relación entre Humanos y Dioses</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <h2>🎯 Características Principales</h2>
+                <ul>
+                    <li>Base de Datos Estructurada (SQLite)</li>
+                    <li>Preprocesamiento Avanzado de Textos</li>
+                    <li>Balanceo de Clases (SMOTE+Tomek)</li>
+                    <li>Fine-Tuning de DistilBERT</li>
+                    <li>Evaluación Completa con Métricas</li>
+                    <li>Interfaz Web Moderna</li>
+                    <li>Interpretabilidad de Resultados</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>🚀 Inicio Rápido</h2>
+                <ol style="padding-left: 20px;">
+                    <li>Clonar el repositorio</li>
+                    <li>Instalar dependencias</li>
+                    <li>Usar el modelo entrenado</li>
+                    <li>Iniciar la aplicación web</li>
+                </ol>
+                <div style="margin-top: 20px;">
+                    <a href="#" class="btn" style="font-size: 0.9em; padding: 10px 20px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">Ver Instrucciones Completas</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Métricas del Modelo</h2>
+                <ul>
+                    <li>F1-Score: ≥ 0.8</li>
+                    <li>Precisión por categoría</li>
+                    <li>Sensibilidad (Recall)</li>
+                    <li>Matriz de Confusión</li>
+                    <li>Accuracy General</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <h2 class="section-title">⚡ Instalación Rápida</h2>
+            
+            <p style="margin-bottom: 15px;"><strong>1. Clonar el repositorio:</strong></p>
+            <div class="code-block">
+<code>git clone https://github.com/USUARIO_GITHUB/clasificador-textos-clasicos.git
+cd clasificador-textos-clasicos</code>
+            <p style="margin-top: 10px; color: var(--text-light); font-size: 0.9em;">
+                ⚠️ Reemplaza <code>USUARIO_GITHUB</code> con tu usuario de GitHub
+            </p>
+            </div>
+
+            <p style="margin-bottom: 15px; margin-top: 25px;"><strong>2. Instalar dependencias:</strong></p>
+            <div class="code-block">
+<code>pip install -r requirements.txt</code>
+            </div>
+
+            <p style="margin-bottom: 15px; margin-top: 25px;"><strong>3. Iniciar la aplicación web:</strong></p>
+            <div class="code-block">
+<code>python app.py</code>
+            </div>
+
+            <p style="margin-top: 25px; color: var(--text-light);">
+                <strong>Nota:</strong> El modelo entrenado y la base de datos ya están incluidos en el repositorio, 
+                por lo que puedes usar el sistema inmediatamente sin necesidad de entrenar.
+            </p>
+        </div>
+
+        <div class="feature-box">
+            <h2 class="section-title">🔧 Estructura del Proyecto</h2>
+            <div class="code-block" style="font-size: 0.85em;">
+<code>clasificador-textos-clasicos/
+├── app.py                          # Aplicación web Flask
+├── config.py                       # Configuración del proyecto
+├── database.py                     # Gestión de base de datos
+├── preprocessing.py                # Preprocesamiento y balanceo
+├── train_model.py                  # Entrenamiento del modelo
+├── evaluate_model.py               # Evaluación del modelo
+├── run_pipeline.py                 # Script principal
+├── requirements.txt                # Dependencias
+├── README.md                       # Documentación principal
+├── data/
+│   └── textos_clasicos.db          # Base de datos (incluida)
+├── models/
+│   └── clasificador_textos_clasicos/  # Modelo entrenado (incluido)
+└── templates/
+    └── index.html                  # Interfaz web</code>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <h2 class="section-title">📚 Tecnologías Utilizadas</h2>
+            <div class="content">
+                <div class="card">
+                    <h3>🤖 Machine Learning</h3>
+                    <ul>
+                        <li>PyTorch</li>
+                        <li>Transformers (Hugging Face)</li>
+                        <li>DistilBERT</li>
+                        <li>scikit-learn</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🔧 Procesamiento</h3>
+                    <ul>
+                        <li>NLTK</li>
+                        <li>pandas</li>
+                        <li>imbalanced-learn</li>
+                        <li>SQLAlchemy</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🌐 Web</h3>
+                    <ul>
+                        <li>Flask</li>
+                        <li>HTML5/CSS3</li>
+                        <li>JavaScript</li>
+                        <li>Gunicorn</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-box">
+            <h2 class="section-title">📝 Licencia</h2>
+            <p>Este proyecto está licenciado bajo la <strong>Licencia MIT</strong>. Ver el archivo <a href="#" target="_blank" style="color: var(--primary-color);" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">LICENSE</a> para más detalles.</p>
+        </div>
+
+        <footer>
+            <p><strong>Clasificador Semántico de Textos Clásicos</strong></p>
+            <p>Desarrollado como proyecto académico para clasificación semántica de textos clásicos</p>
+            <p style="margin-top: 20px;">
+                <a href="#" class="btn" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">⭐ Ver en GitHub</a>
+                <a href="#" class="btn btn-secondary" target="_blank" style="font-size: 0.9em; padding: 10px 20px; margin: 5px;" onclick="alert('⚠️ Por favor actualiza el archivo docs/index.html y reemplaza USERNAME con tu usuario de GitHub'); return false;">🐛 Reportar Problema</a>
+            </p>
+            <p style="margin-top: 15px; font-size: 0.85em; color: #999;">
+                ℹ️ Actualiza <code>USERNAME</code> y <code>USUARIO_GITHUB</code> en este archivo con tu usuario de GitHub
+            </p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: var(--text-light);">
+                © 2024 - Clasificador de Textos Clásicos
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+
